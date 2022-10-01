@@ -1,0 +1,45 @@
+.programme {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    justify-content: space-between;
+    width: 40%;
+    align-items: center;
+    margin-left: 25%;
+}
+ul {
+    list-style: none;
+    display: block;
+}
+li {
+    height: 40px;
+}
+
+.unity {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+} 
+
+.tableau {
+    display: flex;
+    flex-direction: row;
+}
+
+.subtitle_array {
+    text-align:left;
+    margin-top: 40px;
+}
+
+.lastResult {
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 100%;
+    margin-top: 40px;
+
+}
+h2 {
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
