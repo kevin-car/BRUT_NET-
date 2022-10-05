@@ -29,6 +29,8 @@ function Component()  {
         setHebdo(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/52))
         setHoraire(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/(52*40)))
         setAnnuelBrut(retourCalcul.salaireBrut)
+        /* Stocker dans le localStorage */
+        stockerLocalStorage();
     }
 
     const effacerLesChamps = () => {
@@ -40,23 +42,29 @@ function Component()  {
         const date = new Date().toISOString();
         const sauvegardeElement = {
             date : moment(date).format(format),
-            salaireAnnuelBrut : 100000, 
-            salaireAnnuelNet : 80000, 
-            salaireMensuelNet : 5000, 
-            salaire2weekNet : 2500, 
-            salaireHeureNet : 30, 
+            salaireAnnuelBrut : annuelBrut, 
+            salaireAnnuelNet : annuel, 
+            salaireMensuelNet : mensuel, 
+            salaire2weekNet : biHebdo,
+            salaireHeureNet : horaire,
         }
-        console.log(sauvegardeElement)
+        // Récupérer le localStrage dans une variable en tableau 
+        let oldLocalStorage = [] // Si le local storage n'existe pas, je le créé
         if(!localStorage.resultats) {
-            localStorage.setItem('resultats', {})
+            localStorage.setItem('resultats', [])
+        } else { // si le localStorage existe, je récupère saa valeur ! 
+            oldLocalStorage = JSON.parse(window.localStorage.resultats);
         }
-        localStorage.setItem('resultats', JSON.stringify(sauvegardeElement))
-
-        let resultats = JSON.parse(localStorage.getItem('resultats'))
-        console.log(resultats)
+        // Ajouter la date actuelle 
+        console.log('oldLocalStorage: ', oldLocalStorage)
+        let newLocalStorage = [...oldLocalStorage]
+        newLocalStorage.push(sauvegardeElement)
+        newLocalStorage = newLocalStorage.slice(-5)
+        // Renvoyer le nouveau localStorage 
+        localStorage.resultats = JSON.stringify(newLocalStorage)
+        console.log(JSON.parse(localStorage.resultats))
     }
 
-    stockerLocalStorage()
     return(
       <div className="programme">
         <Title/>
