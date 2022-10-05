@@ -3,7 +3,7 @@ export const unitiesList = () => {
 
     const theUnities = [];
     for(let el of unities ) {
-        theUnities.push(<option value={el}>{el}</option>)
+        theUnities.push(<option key={el} value={el}>{el}</option>)
     }
     return theUnities
 }
@@ -14,7 +14,7 @@ export const provinces = () => {
 
     const theProvinces = []
     for( let el of provinces) {
-        theProvinces.push(<option value={el}>{el}</option>)
+        theProvinces.push(<option key={el} value={el}>{el}</option>)
     }
     return theProvinces
 }
@@ -22,8 +22,6 @@ export const provinces = () => {
 export const calculNet = (saisie, periodicite) => {
     let salaireAnnuelBrut = 0
 
-    console.log('periodicité :', periodicite)
-    console.log('saisie', saisie)
    /* Calcul du salaire Annuel Net */ 
     if(periodicite !== 'horaire') {
         switch(periodicite){

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import "./style.css"
 import Title  from "./Title/title";
 import { unitiesList, provinces, calculNet } from '../functions/functions'
@@ -18,10 +18,17 @@ function Component()  {
     const [annuel, setAnnuel] = React.useState(0)
     
     const [annuelBrut, setAnnuelBrut] = React.useState(0)
+    /* fonction forceUpdate */
+    const [, forceUpdate] = useReducer(x => x + 1 , 0)
 
+
+    async function validate () {
+        await alimenterTableau();
+        await stockerLocalStorage();
+    }
 
     /* Incrémenter les champs avec les salaire net obtenus */
-    const alimenterTableau = () => {
+    async function alimenterTableau () {
         const retourCalcul = calculNet(saisie, periodicite); 
         setAnnuel(Math.round(retourCalcul.salaireBrut - retourCalcul.impot))
         setMensuel(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/12))
@@ -29,8 +36,17 @@ function Component()  {
         setHebdo(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/52))
         setHoraire(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/(52*40)))
         setAnnuelBrut(retourCalcul.salaireBrut)
-        /* Stocker dans le localStorage */
-        stockerLocalStorage();
+
+
+        console.log('saisie',saisie )
+        console.log('periodicite',periodicite )
+        console.log('horaire',horaire )
+        console.log('hebdo',hebdo )
+        console.log('mensuel',mensuel )
+        console.log('annuel',annuel )
+        console.log('annuelBrut',annuelBrut )
+
+
     }
 
     const effacerLesChamps = () => {
@@ -48,21 +64,22 @@ function Component()  {
             salaire2weekNet : biHebdo,
             salaireHeureNet : horaire,
         }
+
         // Récupérer le localStrage dans une variable en tableau 
         let oldLocalStorage = [] // Si le local storage n'existe pas, je le créé
         if(!localStorage.resultats) {
             localStorage.setItem('resultats', [])
-        } else { // si le localStorage existe, je récupère saa valeur ! 
+        } else { // si le localStorage existe, je récupère sa valeur ! 
             oldLocalStorage = JSON.parse(window.localStorage.resultats);
         }
-        // Ajouter la date actuelle 
-        console.log('oldLocalStorage: ', oldLocalStorage)
+        console.log(sauvegardeElement)
         let newLocalStorage = [...oldLocalStorage]
         newLocalStorage.push(sauvegardeElement)
         newLocalStorage = newLocalStorage.slice(-5)
+
         // Renvoyer le nouveau localStorage 
         localStorage.resultats = JSON.stringify(newLocalStorage)
-        console.log(JSON.parse(localStorage.resultats))
+        forceUpdate()
     }
 
     return(
@@ -84,16 +101,16 @@ function Component()  {
             <input onChange={e => setSaisie(e.target.value)} placeholder="Saisir le salaire Annuel"/>
         </div>
         <div>
-            <button onClick={ () =>  alimenterTableau() }>Valider</button>
+            <button onClick={ validate }>Valider</button>
             <button onClick={effacerLesChamps}>Effacer les champs</button>
         </div>
         <div className="tableau">
             <ul className="subtitle_array">
-                <li> <input type="text"  disabled="true" id="horaire" value={horaire} /></li>
-                <li> <input type="text"  disabled="true" id="Hebdommadaire" value={hebdo}/> </li>
-                <li> <input type="text"  disabled="true" id="bi-hebdommadaire" value={biHebdo}/> </li>
-                <li> <input type="text"  disabled="true" id="Mensuel" value={mensuel}/></li>
-                <li> <input type="text"  disabled="true" id="Annuel" value={annuel}/> </li>
+                <li> <input type="text"  disabled={true} id="horaire" value={horaire} /></li>
+                <li> <input type="text"  disabled={true} id="Hebdommadaire" value={hebdo}/> </li>
+                <li> <input type="text"  disabled={true} id="bi-hebdommadaire" value={biHebdo}/> </li>
+                <li> <input type="text"  disabled={true} id="Mensuel" value={mensuel}/></li>
+                <li> <input type="text"  disabled={true} id="Annuel" value={annuel}/> </li>
             </ul>
             <ul className="subtitle_array">
                 <li><label htmlFor="horaire">Horaire</label></li>
