@@ -1,13 +1,14 @@
-import React, { useReducer } from "react";
+import React from "react";
 import "./style.css"
 import Title  from "./Title/title";
-import { unitiesList, provinces, calculNet } from '../functions/functions'
+import { unitiesList, provinces, calculNetQuebec, calculNetOntario } from '../functions/functions'
 import { LastResults } from "./lastResults/lastResults";
 import BasicModal from "./modal/modal";
 const moment = require('moment');
 
 function Component()  {
     /* Champ de saisies */
+    const [province, setProvince] = React.useState('quebec')
     const [saisie, setSaisie] = React.useState(0)
     const [periodicite, setPeriodicite] = React.useState('horaire')
 
@@ -18,25 +19,25 @@ function Component()  {
     const [annuel, setAnnuel] = React.useState(0)
     
     const [annuelBrut, setAnnuelBrut] = React.useState(0)
-    /* fonction forceUpdate */
-    const [, forceUpdate] = useReducer(x => x + 1 , 0)
-
 
     async function validate () {
         await alimenterTableau();
-        await stockerLocalStorage();
+        setTimeout( stockerLocalStorage(), 1000);
+        console.log(province)
     }
+
 
     /* Incrémenter les champs avec les salaire net obtenus */
     async function alimenterTableau () {
-        const retourCalcul = calculNet(saisie, periodicite); 
-        setAnnuel(Math.round(retourCalcul.salaireBrut - retourCalcul.impot))
-        setMensuel(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/12))
-        setBiHebdo(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/24))
-        setHebdo(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/52))
-        setHoraire(Math.round((retourCalcul.salaireBrut - retourCalcul.impot)/(52*40)))
+        const retourCalcul =  province === "ontario" ? calculNetOntario(saisie, periodicite) : calculNetQuebec(saisie, periodicite); 
+        console.log('retourCalcul', retourCalcul)
+        const salaireNetAnnuel = retourCalcul.salaireBrut - retourCalcul.impot
+        setAnnuel(Math.round(salaireNetAnnuel));
+        setMensuel(Math.round(salaireNetAnnuel/12))
+        setBiHebdo(Math.round(salaireNetAnnuel/24))
+        setHebdo(Math.round(salaireNetAnnuel/52))
+        setHoraire(Math.round(salaireNetAnnuel/(52*40)))
         setAnnuelBrut(retourCalcul.salaireBrut)
-
 
         console.log('saisie',saisie )
         console.log('periodicite',periodicite )
@@ -45,8 +46,6 @@ function Component()  {
         console.log('mensuel',mensuel )
         console.log('annuel',annuel )
         console.log('annuelBrut',annuelBrut )
-
-
     }
 
     const effacerLesChamps = () => {
@@ -64,6 +63,8 @@ function Component()  {
             salaire2weekNet : biHebdo,
             salaireHeureNet : horaire,
         }
+        console.log('sauvegarde prete pour le local storagr', sauvegardeElement)
+
 
         // Récupérer le localStrage dans une variable en tableau 
         let oldLocalStorage = [] // Si le local storage n'existe pas, je le créé
@@ -77,9 +78,8 @@ function Component()  {
         newLocalStorage.push(sauvegardeElement)
         newLocalStorage = newLocalStorage.slice(-5)
 
-        // Renvoyer le nouveau localStorage 
+        // Renvoyer le nouveau localStorage
         localStorage.resultats = JSON.stringify(newLocalStorage)
-        forceUpdate()
     }
 
     return(
@@ -87,8 +87,10 @@ function Component()  {
         <Title/>
         <div className="unity">
             <label>PROVINCE : </label>
-            <select>
-                {provinces()}
+            <select defaultValue="quebec" onChange={(e)  => setProvince(e.target.value)}>
+                <option value="quebec">quebec</option>
+                <option value="ontario">ontario</option>
+
             </select>
         </div>
         <div className="unity">
@@ -120,14 +122,14 @@ function Component()  {
                 <li><label htmlFor="Annuel">Annuel</label></li>
             </ul>
             </div>
-            <div className="citation">Cette simulation est réalisée à titre purement informatif</div>
-            <div className="lastButtons">
-                <BasicModal element="aPropos"/>
-                <BasicModal element="Aide"/>
-            </div>
+
             <div className="lastResult">
                 <h2>Derniers résultats </h2>
                 <LastResults/>
+            </div>
+            <div className="lastButtons">
+                <BasicModal element="aPropos"/>
+                <BasicModal element="Aide"/>
             </div>
         </div>
     );

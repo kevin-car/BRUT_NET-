@@ -22,6 +22,13 @@ const style = {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const titreAPropos = 'A propos'
+  const titreAide = 'Aide'
+
+  const texteAPropos = "Bonjour, Cette application est à but lucrative dans la formation soutien informatique de l'EMICA. <br> Elle a été réalisée par Kevin CARPENTIER."
+
+  const aide = ` Cette application est à destination de personnes cherchant à convertir leur salaire BRUT en NET. Il sera utilisé par des personnes voulant calculer leur salaire net à la vue d'une nouvelle opportunité ou d'une personne travaillant dans les ressources humaines. 
+  Saisissez la province, la périodicité et le salaire. L'application calculera pour vous le montant des salaires net par période.`
 
   return (
     <div>
@@ -35,10 +42,10 @@ const style = {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            { props.element === "aPropos" ? "texte à propos" : "texte de l'aide" }
+            { props.element === "aPropos" ? titreAPropos : titreAide }
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {props.element === "aPropos" ? "ceci est le texte de à propos" : "ceci est le texte de l'aide "}
+            {props.element === "aPropos" ? texteAPropos : aide}
           </Typography>
         </Box>
       </Modal>
