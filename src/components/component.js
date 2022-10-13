@@ -1,9 +1,10 @@
 import React from "react";
 import "./style.css"
 import Title  from "./Title/title";
-import { unitiesList, provinces, calculNetQuebec, calculNetOntario } from '../functions/functions'
+import { unitiesList, calculNetQuebec, calculNetOntario } from '../functions/functions'
 import { LastResults } from "./lastResults/lastResults";
 import BasicModal from "./modal/modal";
+import SimpleSnackbar from "./modal/simpleSnackBar";
 const moment = require('moment');
 
 function Component()  {
@@ -19,24 +20,28 @@ function Component()  {
     const [annuel, setAnnuel] = React.useState(0)
     
     const [annuelBrut, setAnnuelBrut] = React.useState(0)
+    
 
     async function validate () {
         await alimenterTableau();
         setTimeout( stockerLocalStorage(), 1000);
-        console.log(province)
     }
+
 
 
     /* Incrémenter les champs avec les salaire net obtenus */
     async function alimenterTableau () {
+        /* Recupérer le salaire Net Annuel  */
         const retourCalcul =  province === "ontario" ? calculNetOntario(saisie, periodicite) : calculNetQuebec(saisie, periodicite); 
         console.log('retourCalcul', retourCalcul)
         const salaireNetAnnuel = retourCalcul.salaireBrut - retourCalcul.impot
+        
+        /* Mettre les salaire net dans les states  */
         setAnnuel(Math.round(salaireNetAnnuel));
         setMensuel(Math.round(salaireNetAnnuel/12))
         setBiHebdo(Math.round(salaireNetAnnuel/24))
         setHebdo(Math.round(salaireNetAnnuel/52))
-        setHoraire(Math.round(salaireNetAnnuel/(52*40)))
+        setHoraire((salaireNetAnnuel/(52*40)).toFixed(2))
         setAnnuelBrut(retourCalcul.salaireBrut)
 
         console.log('saisie',saisie )
@@ -52,6 +57,7 @@ function Component()  {
         setAnnuel(0); setMensuel(0); setBiHebdo(0); setHebdo(0); setHoraire(0); setSaisie(0);
     }
 
+    
     const stockerLocalStorage = () => {
         const format = 'YYYY/MM/DD - hh:mm A'
         const date = new Date().toISOString();
@@ -85,26 +91,33 @@ function Component()  {
     return(
       <div className="programme">
         <Title/>
-        <div className="unity">
-            <label>PROVINCE : </label>
-            <select defaultValue="quebec" onChange={(e)  => setProvince(e.target.value)}>
-                <option value="quebec">quebec</option>
-                <option value="ontario">ontario</option>
 
-            </select>
+        <div className="menuSelectable">
+            <div className="select">
+                <label>PROVINCE : </label>
+                <select defaultValue="quebec" onChange={(e)  => setProvince(e.target.value)}>
+                    <option value="quebec">quebec</option>
+                    <option value="ontario">ontario</option>
+
+                </select>
+            </div>
+            <div className="select">
+                <label htmlFor="">UNITE DU SALAIRE : </label>
+                <select onChange={e => setPeriodicite(e.target.value)}>
+                    {unitiesList()}
+                </select>
+            </div>
+
         </div>
-        <div className="unity">
-            <label htmlFor="">UNITE DU SALAIRE : </label>
-            <select onChange={e => setPeriodicite(e.target.value)}>
-                {unitiesList()}
-            </select>
-        </div>
-        <div className="mount">
-            <input onChange={e => setSaisie(e.target.value)} placeholder="Saisir le salaire Annuel"/>
-        </div>
-        <div>
-            <button onClick={ validate }>Valider</button>
-            <button onClick={effacerLesChamps}>Effacer les champs</button>
+            <div className="mount">
+                <input onChange={e => setSaisie(e.target.value)} placeholder="Saisir le salaire Annuel"/>
+            </div>
+
+
+        <div className="boutonsPrincipaux" >
+            <button className="btn btn-primary btn-lg active" onClick={ alimenterTableau }>Calculer</button>
+            <button className="btn btn-primary btn-lg secondary" onClick={ stockerLocalStorage }>Stocker</button>
+            <button className="btn btn-primary btn-lg success" onClick={effacerLesChamps}>Effacer les champs</button>
         </div>
         <div className="tableau">
             <ul className="subtitle_array">
@@ -115,11 +128,11 @@ function Component()  {
                 <li> <input type="text"  disabled={true} id="Annuel" value={annuel}/> </li>
             </ul>
             <ul className="subtitle_array">
-                <li><label htmlFor="horaire">Horaire</label></li>
-                <li><label htmlFor="Hebdommadaire">Hebdommadaire</label></li>
-                <li><label htmlFor="bi-hebdommadaire">Aux 2 semaines</label></li>
-                <li> <label htmlFor="Mensuel">Mensuel</label></li>
-                <li><label htmlFor="Annuel">Annuel</label></li>
+                <li><label htmlFor="horaire">$ Horaire</label></li>
+                <li><label htmlFor="Hebdommadaire">$ Hebdommadaire</label></li>
+                <li><label htmlFor="bi-hebdommadaire">$ Aux 2 semaines</label></li>
+                <li> <label htmlFor="Mensuel">$ Mensuel</label></li>
+                <li><label htmlFor="Annuel">$ Annuel</label></li>
             </ul>
             </div>
 
@@ -130,6 +143,9 @@ function Component()  {
             <div className="lastButtons">
                 <BasicModal element="aPropos"/>
                 <BasicModal element="Aide"/>
+            </div>
+            <div className="boiteCredit">
+                <SimpleSnackbar/>
             </div>
         </div>
     );

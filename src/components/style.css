@@ -1,3 +1,11 @@
+body {
+    background-color: beige;
+}
+
+h1 {
+    margin-bottom: 30px;
+}
+
 .programme {
     display: flex;
     flex-direction: column;
@@ -15,12 +23,47 @@ li {
     height: 40px;
 }
 
-.unity {
+.menuSelectable {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 20px;
+    padding-bottom: 90px;
+    border: 2px dotted blue;
+    margin-bottom: 10px;
+    border-radius: 20px;
+}
+.mount {
+    padding: 20px;
+    border: 2px dotted blue;
+    border-radius: 20px;
+}
+
+.select {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
     margin-bottom: 20px;
 } 
+.boutonsPrincipaux {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    margin-top: 40px;
+    border: 2px dotted blue;
+    border-radius: 20px;
+}
+
+.subtitle_array {
+    padding-left: 0;
+}
+.subtitle_array label{
+    padding-top: 3px;
+}
+
+.subtitle_array li input{
+    text-align: end;
+}
 
 .tableau {
     display: flex;
@@ -42,4 +85,16 @@ li {
 h2 {
     margin-bottom: 40px;
     margin-top: 40px;
+}
+
+.lastButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin-top: 100px;
+}
+
+.boiteCredit {
+    margin-top: 50px;
+    right: 0;
 }
