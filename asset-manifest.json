@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/BRUT_NET-/static/css/main.86704ede.css",
-    "main.js": "/BRUT_NET-/static/js/main.68684817.js",
+    "main.js": "/BRUT_NET-/static/js/main.737a74e0.js",
     "index.html": "/BRUT_NET-/index.html",
     "main.86704ede.css.map": "/BRUT_NET-/static/css/main.86704ede.css.map",
-    "main.68684817.js.map": "/BRUT_NET-/static/js/main.68684817.js.map"
+    "main.737a74e0.js.map": "/BRUT_NET-/static/js/main.737a74e0.js.map"
   },
   "entrypoints": [
     "static/css/main.86704ede.css",
-    "static/js/main.68684817.js"
+    "static/js/main.737a74e0.js"
   ]
 }
