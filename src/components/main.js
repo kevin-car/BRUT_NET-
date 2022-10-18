@@ -22,13 +22,6 @@ function Component()  {
     const [annuelBrut, setAnnuelBrut] = React.useState(0)
     
 
-    async function validate () {
-        await alimenterTableau();
-        setTimeout( stockerLocalStorage(), 1000);
-    }
-
-
-
     /* Incrémenter les champs avec les salaire net obtenus */
     async function alimenterTableau () {
         /* Recupérer le salaire Net Annuel  */
@@ -110,9 +103,8 @@ function Component()  {
 
         </div>
             <div className="mount">
-                <input onChange={e => setSaisie(e.target.value)} placeholder="Saisir le salaire Annuel"/>
+                <input onChange={e => setSaisie(e.target.value)} placeholder="Saisir le salaire"/>
             </div>
-
 
         <div className="boutonsPrincipaux" >
             <button className="btn btn-primary btn-lg active" onClick={ alimenterTableau }>Calculer</button>

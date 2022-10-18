@@ -7,8 +7,11 @@ export function LastResults(){
 
   /* Récupérer le localStorage Results et le préparer pour composant Score*/
   React.useEffect( ()=> {
-    const resultats = JSON.parse(window.localStorage.resultats).reverse()
-    setMyLocalStorage(resultats)
+    console.log(window.localStorage.resultats)
+    if(window.localStorage.resultats) {
+      const resultats = JSON.parse(window.localStorage.resultats).reverse()
+      setMyLocalStorage(resultats)
+    }
   },[])
 
   return (
